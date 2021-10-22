@@ -1,20 +1,12 @@
 import * as messages from "../messages.js";
+import SingleMessageProcessor from "./patterns/SingleMessageProcessor.js";
 
 export default function Concat() {
 
-    const listeners = [];
-
-    function inbox(message, ...args) {
-        if(message == messages.sortedWords) {
-            const result = args.join(" ");
-            listeners.forEach(listener => listener(messages.concatenatedWords, result));
-        }
-    };
-
-    inbox.subscribe = function(listener) {
-        listeners.push(listener);
-    }
-
-    return inbox;
+    return SingleMessageProcessor(
+        messages.sortedWords,
+        messages.concatenatedWords,
+        args => args.join(" ")
+    );
 
 }
