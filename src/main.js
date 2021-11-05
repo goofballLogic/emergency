@@ -1,21 +1,43 @@
-import Concat from "./actors/Concat.js";
-import World from "./World.js";
+import APIFetcher from "./actors/api-fetcher.js";
+import ConsoleInput from "./actors/console-input.js";
+import ConsoleOutput from "./actors/console-output.js";
+import ProjectExtractor from "./actors/project-extractor.js";
+import TimeFocus from "./actors/time-focus.js";
+import EntryReport from "./actors/entry-report.js";
+
 import * as messages from "./messages.js";
-import Sorter from "./actors/Sorter.js";
-import Filter from "./actors/Filter.js";
 
-const world = new World();
-world.add(Concat());
-world.add(Sorter());
-world.add(Filter());
+const fetcher = new APIFetcher();
+const projectExtractor = new ProjectExtractor();
+const timeFocus = new TimeFocus();
+const entryReport = new EntryReport();
 
-const results = 
-    world(
-        [messages.concatenatedWords],
-        messages.words, 
-        "What if I were to simply stop trying and allow the tide to take me where it will".split(" ")
-    );
+const consoleOutput = new ConsoleOutput();
+const consoleInput = new ConsoleInput();
 
-const result = results[0][1];
+(async function () {
+  await fetcher(messages.config, {
+    ...process.env,
+    API: "https://api.nokotime.com/v2/",
+  });
 
-console.log(result);
+  let action = messages.startup;
+  while (action != messages.actions.quit) {
+
+    const timeFocusResult = await timeFocus(action);
+    let result = timeFocusResult ? await fetcher(...timeFocusResult) : [];
+    result = (await entryReport(...result)) || result;
+    await consoleOutput(messages.output, ...result);
+
+    action = await consoleInput(messages.selectOption, [
+      {
+        prompt: "Quit",
+        message: messages.actions.quit,
+      },
+      {
+        prompt: "Back one week",
+        message: messages.actions.backOneWeek,
+      },
+    ]);
+  }
+})();

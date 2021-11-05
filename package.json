@@ -1,4 +1,8 @@
 {
     "type": "module",
-    "main": "index.js"
+    "main": "index.js",
+    "dependencies": {
+        "cli-select": "^1.1.2",
+        "node-fetch": "^3.0.0"
+    }
 }
