@@ -1,13 +1,13 @@
-export const config = Symbol("Configuration");
-export const startDateChanged = Symbol("Start date changed");
-export const entries = Symbol("Entries");
-export const entriesError = Symbol("Entries error");
-export const projects = Symbol("Projects");
-export const output = Symbol("Output");
+export const info = Symbol("Info");
+export const uppercase = Symbol("Uppercase");
+export const add = Symbol("Add");
+export const longer = Symbol("Longer");
+export const results = Symbol("Results");
 
-export const startup = Symbol("Start up");
-
-export const actions = {
-    quit: Symbol("Action: Quit"),
-    backOneWeek: Symbol("Action: Back one week")
+export const testing = {
+    failed: Symbol("Testing Failed"),
+    ok: Symbol("Testing ok"),
+    requested: Symbol("Testing Requested"),
+    complete: Symbol("Testing Complete"),
+    pending: Symbol("Testing Pending")
 };
